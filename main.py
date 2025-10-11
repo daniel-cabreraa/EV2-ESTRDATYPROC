@@ -12,7 +12,7 @@ nombresTurnos = {"M": "Matutino", "V": "Vespertino", "N": "Nocturno"}
 hoy = dt.datetime.now()
 
 def agregarCliente():
-    print("Escribe '0' en cualquier campo para cancelar la operacion.")
+    print("Escribe '0' en cualquier campo para cancelar la operación.")
     while True:
         nombre = input("Ingresa el nombre(s): ")
         if nombre == "" or nombre.strip() == "":
@@ -57,7 +57,7 @@ def reservarSala():
             continue
         if claveCliente not in clientes.keys():
             print("⚠︎ La clave de cliente no existe.")
-            opcionCancelar = input("¿Cancelar operacion? (S - sí/N - no) ")
+            opcionCancelar = input("¿Cancelar operación? (S - sí/N - no) ")
             if opcionCancelar.upper() == "S":
                 menu()
             elif opcionCancelar.upper() == "N":
@@ -74,7 +74,7 @@ def reservarSala():
             fechaAgendada = dt.datetime.strptime(fecha_string, "%d/%m/%Y")
         except ValueError:
             print("⚠︎ Fecha inválida.")
-            opcionCancelar = input("¿Cancelar operacion? (S - sí/N - no) ")
+            opcionCancelar = input("¿Cancelar operación? (S - sí/N - no) ")
             if opcionCancelar.upper() == "S":
                 return
             elif opcionCancelar.upper() == "N":
@@ -112,7 +112,7 @@ def reservarSala():
             continue
         if salaAgendada not in salas.keys():
             print("ⓘ La sala no existe.")
-            opcionCancelar = input("¿Cancelar operacion? (S - sí/N - no) ")
+            opcionCancelar = input("¿Cancelar operación? (S - sí/N - no) ")
             if opcionCancelar.upper() == "S":
                 return
             elif opcionCancelar.upper() == "N":
@@ -122,7 +122,7 @@ def reservarSala():
                 continue
         if not disponibilidad[salaAgendada]:
             print("ⓘ Esta sala no tiene turnos disponibles en la fecha seleccionada.")
-            opcionCancelar = input("¿Cancelar operacion? (S - sí/N - no) ")
+            opcionCancelar = input("¿Cancelar operación? (S - sí/N - no) ")
             if opcionCancelar.upper() == "S":
                 return
             elif opcionCancelar.upper() == "N":
@@ -135,7 +135,7 @@ def reservarSala():
         turno = input("Elige el turno a agendar (M - matutino, V - vespertino, N - nocturno): ")
         if turno.upper() not in disponibilidad[salaAgendada]:
             print("⚠︎ Turno no disponible para esta sala.")
-            opcionCancelar = input("¿Cancelar operacion? (S - sí/N - no) ")
+            opcionCancelar = input("¿Cancelar operación? (S - sí/N - no) ")
             if opcionCancelar.upper() == "S":
                 return
             elif opcionCancelar.upper() == "N":
@@ -146,7 +146,7 @@ def reservarSala():
         turnoAgendado = turno.upper()
         break
     while True:
-        print("Escribe '0' para cancelar la operacion.")
+        print("Escribe '0' para cancelar la operación.")
         nombreEvento = input("Ingresa el nombre del evento: ")
         if nombreEvento == "" or nombreEvento.strip() == "":
             print("ⓘ El nombre del evento no puede estar vacío.")
@@ -203,7 +203,7 @@ def consultarReservaciones():
         print("ⓘ No hay reservaciones. Registra una ahora:")
         reservarSala()
     print("Para consultar una reservación, ingresa la fecha (dd/mm/aaaa) bajo la que fue agendada.")
-    print("Escribe '0' en cualquier campo para cancelar la operacion.")
+    print("Escribe '0' en cualquier campo para cancelar la operación.")
     while True:
         fechaConsultada_string = input("Fecha a consultar: ")
         if fechaConsultada_string == "0":
@@ -241,7 +241,7 @@ def consultarReservaciones():
             continue
 
 def registrarSala():
-    print("Escribe '0' en cualquier campo para cancelar la operacion.")
+    print("Escribe '0' en cualquier campo para cancelar la operación.")
     while True:
         nombreSala = input("Ingresa el nombre de la sala: ")
         if nombreSala == "0":
@@ -269,7 +269,7 @@ def editarEvento():
         print("ⓘ No hay reservaciones registradas.")
         return
     print("Para editar el nombre de un evento existente, ingresa el rango de fechas (dd/mm/aaaa) en el que se encuentra agendado el evento que quieres editar.")
-    print("Escribe '0' en cualquier campo para cancelar la operacion.")
+    print("Escribe '0' en cualquier campo para cancelar la operación.")
     while True:
         inicioRango_string = input("Del: ")
         if inicioRango_string == "0":
@@ -282,7 +282,7 @@ def editarEvento():
             finRango = dt.datetime.strptime(finRango_string, "%d/%m/%Y")
         except:
             print("⚠︎ Fecha inválida.")
-            opcionCancelar = input("¿Cancelar operacion? (S - sí/N - no) ")
+            opcionCancelar = input("¿Cancelar operación? (S - sí/N - no) ")
             if opcionCancelar.upper() == "S":
                 return
             elif opcionCancelar.upper() == "N":

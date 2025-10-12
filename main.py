@@ -200,8 +200,8 @@ def exportarXLSX(fecha:dt.datetime, diccionario:dict):
 
 def consultarReservaciones():
     if not reservaciones:
-        print("ⓘ No hay reservaciones. Registra una ahora:")
-        reservarSala()
+        print("ⓘ No hay reservaciones.")
+        return
     print("Para consultar una reservación, ingresa la fecha (dd/mm/aaaa) bajo la que fue agendada.")
     print("Escribe '0' en cualquier campo para cancelar la operación.")
     while True:

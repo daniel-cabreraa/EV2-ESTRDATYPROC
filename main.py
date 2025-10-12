@@ -46,8 +46,8 @@ def mostrarClientes():
 
 def reservarSala():
     if not clientes:
-        print("ⓘ No hay clientes registrados. Agrega uno ahora:")
-        agregarCliente()
+        print("ⓘ No hay clientes registrados.")
+        return
     while True:
         mostrarClientes()
         try:

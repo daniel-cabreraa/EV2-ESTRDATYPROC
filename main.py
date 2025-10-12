@@ -57,7 +57,7 @@ def reservarSala():
             continue
         if claveCliente not in clientes.keys():
             print("⚠︎ La clave de cliente no existe.")
-            opcionCancelar = input("¿Cancelar operación? (S - sí/N - no) ")
+            opcionCancelar = input("¿Cancelar operación? (S/N) ")
             if opcionCancelar.upper() == "S":
                 menu()
             elif opcionCancelar.upper() == "N":
@@ -74,7 +74,7 @@ def reservarSala():
             fechaAgendada = dt.datetime.strptime(fecha_string, "%d/%m/%Y")
         except ValueError:
             print("⚠︎ Fecha inválida.")
-            opcionCancelar = input("¿Cancelar operación? (S - sí/N - no) ")
+            opcionCancelar = input("¿Cancelar operación? (S/N) ")
             if opcionCancelar.upper() == "S":
                 return
             elif opcionCancelar.upper() == "N":
@@ -112,7 +112,7 @@ def reservarSala():
             continue
         if salaAgendada not in salas.keys():
             print("ⓘ La sala no existe.")
-            opcionCancelar = input("¿Cancelar operación? (S - sí/N - no) ")
+            opcionCancelar = input("¿Cancelar operación? (S/N) ")
             if opcionCancelar.upper() == "S":
                 return
             elif opcionCancelar.upper() == "N":
@@ -122,7 +122,7 @@ def reservarSala():
                 continue
         if not disponibilidad[salaAgendada]:
             print("ⓘ Esta sala no tiene turnos disponibles en la fecha seleccionada.")
-            opcionCancelar = input("¿Cancelar operación? (S - sí/N - no) ")
+            opcionCancelar = input("¿Cancelar operación? (S/N) ")
             if opcionCancelar.upper() == "S":
                 return
             elif opcionCancelar.upper() == "N":
@@ -135,7 +135,7 @@ def reservarSala():
         turno = input("Elige el turno a agendar (M - matutino, V - vespertino, N - nocturno): ")
         if turno.upper() not in disponibilidad[salaAgendada]:
             print("⚠︎ Turno no disponible para esta sala.")
-            opcionCancelar = input("¿Cancelar operación? (S - sí/N - no) ")
+            opcionCancelar = input("¿Cancelar operación? (S/N) ")
             if opcionCancelar.upper() == "S":
                 return
             elif opcionCancelar.upper() == "N":
@@ -179,7 +179,7 @@ def exportarXLSX(fecha:dt.datetime, diccionario:dict):
     hoja.column_dimensions["D"].width = 10
 
     for llave, (fechaExportar, turno, salaID, clienteID, nombreEvento) in diccionario.items():
-            fila = [salas[salaID][0], clientes[clienteID][0] + clientes[clienteID][1], nombreEvento, nombresTurnos[turno]]
+            fila = [salas[salaID][0], clientes[clienteID][0] + ' ' + clientes[clienteID][1], nombreEvento, nombresTurnos[turno]]
             hoja.append(fila)
 
     negritas = Font(bold = True)
@@ -217,6 +217,18 @@ def consultarReservaciones():
         for llave, valor in reservaciones.items():
             if valor[0] == fechaConsultada:
                 consultas.update({llave:valor})
+
+        if not consultas:
+            print("ⓘ No existen reservaciones agendadas bajo esta fecha.")
+            opcionCancelar = input("¿Cancelar operación? (S/N) ")
+            if opcionCancelar.upper() == "S":
+                return
+            elif opcionCancelar.upper() == "N":
+                continue
+            else:
+                print("⚠︎ Opción no reconocida.")
+                continue
+
         print("\n")
         print("*"*70)
         print(f"REPORTE DE RESERVACIONES PARA EL DIA {fechaConsultada.strftime('%d %b %Y')}")
@@ -229,7 +241,7 @@ def consultarReservaciones():
         print("*"*70)
         break
     while True:
-        opcionExportar = input(f"Deseas exportar el reporte de reservaciones del {fechaConsultada.strftime('%d %b %Y')} a Excel? (S/N) ").upper()
+        opcionExportar = input(f"¿Deseas exportar el reporte de reservaciones del {fechaConsultada.strftime('%d %b %Y')} a Excel? (S/N) ").upper()
         if opcionExportar == "S":
             exportarXLSX(fechaConsultada, consultas)
             print("✓ El reporte fue exportado exitosamente.")
@@ -268,9 +280,10 @@ def editarEvento():
     if not reservaciones:
         print("ⓘ No hay reservaciones registradas.")
         return
-    print("Para editar el nombre de un evento existente, ingresa el rango de fechas (dd/mm/aaaa) en el que se encuentra agendado el evento que quieres editar.")
-    print("Escribe '0' en cualquier campo para cancelar la operación.")
+
     while True:
+        print("Para editar el nombre de un evento existente, ingresa el rango de fechas (dd/mm/aaaa) en el que se encuentra agendado el evento que quieres editar.")
+        print("Escribe '0' en cualquier campo para cancelar la operación.")
         inicioRango_string = input("Del: ")
         if inicioRango_string == "0":
             return
@@ -282,7 +295,7 @@ def editarEvento():
             finRango = dt.datetime.strptime(finRango_string, "%d/%m/%Y")
         except:
             print("⚠︎ Fecha inválida.")
-            opcionCancelar = input("¿Cancelar operación? (S - sí/N - no) ")
+            opcionCancelar = input("¿Cancelar operación? (S/N) ")
             if opcionCancelar.upper() == "S":
                 return
             elif opcionCancelar.upper() == "N":
@@ -290,42 +303,52 @@ def editarEvento():
             else:
                 print("⚠︎ Opción no reconocida.")
                 continue
-        break
 
-    rangoFiltrado = {}
-    for llave, valor in reservaciones.items():
-        if inicioRango <= valor[0] <= finRango:
-            rangoFiltrado.update({llave:valor})
+        rangoFiltrado = {}
+        for llave, valor in reservaciones.items():
+            if inicioRango <= valor[0] <= finRango:
+                rangoFiltrado.update({llave:valor})
 
-    print(f"\nEVENTOS REGISTRADOS ENTRE EL {inicioRango.strftime("%d %b %Y")} Y EL {finRango.strftime("%d %b %Y")}:")
-    print("*"*50)
-    print(f"Clave\tFecha\t\tNombre\t\tTurno\tSala")
-    for idEvento, datos in rangoFiltrado.items():
-        fecha, turno, sala, cliente, nombreEvento = datos
-        print(f"{idEvento}\t{fecha.strftime('%d/%m/%Y')}\t{nombreEvento}\t{nombresTurnos.get(turno)}\t{sala} '{salas.get(sala)[0]}'")
-    print("*"*50)
-    while True:
-        try:
-            eventoEditando = int(input("\nIngresa la clave del evento que deseas renombrar: "))
-        except ValueError:
-            print("⚠︎ Clave inválida.")
-            continue
-        if eventoEditando == 0:
-            return
-        if eventoEditando not in rangoFiltrado.keys():
-            print("ⓘ Este evento no existe en el rango de fechas.")
-            continue
-        break
-    while True:
-        nuevoNombre = input("Ingresa el nuevo nombre para el evento: ")
-        if nuevoNombre == "0":
-            return
-        if nuevoNombre == "" or nuevoNombre.strip() == "":
-            print("ⓘ El nombre no puede estar vacío.")
-            continue
-        break
-    reservaciones[eventoEditando][4] = nuevoNombre
-    print(f"✓ El nombre del evento con clave {eventoEditando} fue editado a '{nuevoNombre}' exitosamente.\n")
+        if not rangoFiltrado:
+            print("ⓘ No existen reservaciones en el rango seleccionado.")
+            opcionCancelar = input("¿Cancelar operación? (S/N) ")
+            if opcionCancelar.upper() == "S":
+                return
+            elif opcionCancelar.upper() == "N":
+                continue
+            else:
+                print("⚠︎ Opción no reconocida.")
+                continue
+
+        print(f"\nEVENTOS REGISTRADOS ENTRE EL {inicioRango.strftime("%d %b %Y")} Y EL {finRango.strftime("%d %b %Y")}:")
+        print("*"*100)
+        print(f"{'Clave':<10}{'Fecha':<20}{'Nombre':<30}{'Turno':<20}Sala")
+        for idEvento, datos in rangoFiltrado.items():
+            fecha, turno, sala, cliente, nombreEvento = datos
+            print(f"{idEvento:<10}{fecha.strftime('%d/%m/%Y'):<20}{nombreEvento:<30}{nombresTurnos.get(turno):<20}{salas.get(sala)[0]}")
+        print("*"*100)
+        while True:
+            try:
+                eventoEditando = int(input("\nIngresa la clave del evento que deseas renombrar: "))
+            except ValueError:
+                print("⚠︎ Clave inválida.")
+                continue
+            if eventoEditando == 0:
+                return
+            if eventoEditando not in rangoFiltrado.keys():
+                print("ⓘ Este evento no existe en el rango de fechas.")
+                continue
+            break
+        while True:
+            nuevoNombre = input("Ingresa el nuevo nombre para el evento: ")
+            if nuevoNombre == "0":
+                return
+            if nuevoNombre == "" or nuevoNombre.strip() == "":
+                print("ⓘ El nombre no puede estar vacío.")
+                continue
+            break
+        reservaciones[eventoEditando][4] = nuevoNombre
+        print(f"✓ El nombre del evento con clave {eventoEditando} fue editado a '{nuevoNombre}' exitosamente.\n")
 
 def serializarDatetime(obj):
     if isinstance(obj, dt.datetime):
@@ -334,7 +357,7 @@ def serializarDatetime(obj):
 
 def guardarJSON():
     if not reservaciones or not clientes:
-        print("ⓘ No hay informacion para guardar.")
+        print("ⓘ No hay información para guardar.")
         return False
 
     datosGuardados = {}
@@ -411,7 +434,7 @@ def menu():
             registrarSala()
             continue
         elif opcion.lower() == "f":
-            guardarSalir = input("Guardar y salir? (S/N): ")
+            guardarSalir = input("¿Guardar y salir? (S/N): ")
             if guardarSalir.upper() == "S":
                 if guardarJSON() == False:
                     print("Saliendo...")
